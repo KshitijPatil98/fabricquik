@@ -1,0 +1,19 @@
+version: "3"
+
+networks:
+  ${NETWORK_NAME}:    
+       name: ${NETWORK_NAME}
+
+services:
+    ${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com:
+        container_name: ${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com
+        image: ${CC_NAME}_chaincode
+        volumes:
+            - ./crypto:/crypto
+        env_file:
+            - ${CC_NAME}.env
+        networks:
+         - ${NETWORK_NAME}
+        expose:
+            - ${CC_PORT}
+

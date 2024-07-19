@@ -1,0 +1,33 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '3'
+
+    
+networks:
+  ${NETWORK}:    
+       name: ${NETWORK}
+
+    
+        
+services:
+
+  tlsca-${ORGNAME}:
+    image: hyperledger/fabric-ca:1.5.7
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=tlsca-${ORGNAME}
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=${TLSCAPORT}
+    ports:
+      - "${TLSCAPORT}:${TLSCAPORT}"
+    command: sh -c 'fabric-ca-server start -b tlscaadmin:tlscaadminpw -d'
+    volumes:
+      - ../../../organizations/tlsca_certs/${ORGNAME}:/etc/hyperledger/fabric-ca-server
+    container_name: tlsca-${ORGNAME} 
+    networks:
+      - ${NETWORK}
+
+ 

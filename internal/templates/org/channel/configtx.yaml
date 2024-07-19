@@ -1,0 +1,327 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+---
+################################################################################
+#
+#   Section: Organizations
+#
+#   - This section defines the different organizational identities which will
+#   be referenced later in the configuration.
+#
+################################################################################
+Organizations:
+
+    # SampleOrg defines an MSP using the sampleconfig.  It should never be used
+    # in production but may be used as a template for other definitions
+    - &${ORDERERNAME}Org
+        # DefaultOrg defines the organization which is used in the sampleconfig
+        # of the fabric.git development environment
+        Name: ${ORDERERNAME}Org
+
+        # ID to load the MSP definition as
+        ID: ${ORDERERNAME}MSP
+
+        # MSPDir is the filesystem path which contains the MSP configuration
+        MSPDir: ../../../organizations/${ORDERERNAME_ALL_LOWER}Organizations/${ORDERERNAME_ALL_LOWER}.${PROJECT_NAME}.com/msp
+
+        # Policies defines the set of policies at this level of the config tree
+        # For organization policies, their canonical path is usually
+        #   /Channel/<Application|${ORDERERNAME}>/<OrgName>/<PolicyName>
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('${ORDERERNAME}MSP.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('${ORDERERNAME}MSP.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('${ORDERERNAME}MSP.admin')"
+
+        ${ORDERERNAME}Endpoints:
+            - ${ORDERER0_NAME}.${PROJECT_NAME}.com:${ORDERER0_LIS_PORT}
+
+    - &${OWNERNAME_FIRST_UPPER}
+        # DefaultOrg defines the organization which is used in the sampleconfig
+        # of the fabric.git development environment
+        #ALWAYS ALWAYS MAKE SURE THAT NAME AND ID ARE ALWAYS ALWAYS SAME. KEEP IT AS ORG_NAMEMSP ALWAYS. 
+        Name: ${OWNERNAME_FIRST_UPPER}MSP
+
+        # ID to load the MSP definition as
+        ID: ${OWNERNAME_FIRST_UPPER}MSP
+
+        MSPDir: ../../../organizations/peerOrganizations/${OWNERNAME_ALL_LOWER}.${PROJECT_NAME}.com/msp
+
+        # Policies defines the set of policies at this level of the config tree
+        # For organization policies, their canonical path is usually
+        #   /Channel/<Application|${ORDERERNAME}>/<OrgName>/<PolicyName>
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('${OWNERNAME_FIRST_UPPER}MSP.admin', '${OWNERNAME_FIRST_UPPER}MSP.peer', '${OWNERNAME_FIRST_UPPER}MSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('${OWNERNAME_FIRST_UPPER}MSP.admin', '${OWNERNAME_FIRST_UPPER}MSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('${OWNERNAME_FIRST_UPPER}MSP.admin')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('${OWNERNAME_FIRST_UPPER}MSP.peer')"
+
+    - &${ORGNAME_FIRST_UPPER}
+        # DefaultOrg defines the organization which is used in the sampleconfig
+        # of the fabric.git development environment
+        Name: ${ORGNAME_FIRST_UPPER}MSP
+
+        # ID to load the MSP definition as
+        ID: ${ORGNAME_FIRST_UPPER}MSP
+
+        MSPDir: ../../../organizations/peerOrganizations/${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/msp
+
+        # Policies defines the set of policies at this level of the config tree
+        # For organization policies, their canonical path is usually
+        #   /Channel/<Application|${ORDERERNAME}>/<OrgName>/<PolicyName>
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('${ORGNAME_FIRST_UPPER}MSP.admin', '${ORGNAME_FIRST_UPPER}MSP.peer', '${ORGNAME_FIRST_UPPER}MSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('${ORGNAME_FIRST_UPPER}MSP.admin', '${ORGNAME_FIRST_UPPER}MSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('${ORGNAME_FIRST_UPPER}MSP.admin')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('${ORGNAME_FIRST_UPPER}MSP.peer')"
+
+################################################################################
+#
+#   SECTION: Capabilities
+#
+#   - This section defines the capabilities of fabric network. This is a new
+#   concept as of v1.1.0 and should not be utilized in mixed networks with
+#   v1.0.x peers and ${ORDERERNAME_ALL_LOWER}s.  Capabilities define features which must be
+#   present in a fabric binary for that binary to safely participate in the
+#   fabric network.  For instance, if a new MSP type is added, newer binaries
+#   might recognize and validate the signatures from this type, while older
+#   binaries without this support would be unable to validate those
+#   transactions.  This could lead to different versions of the fabric binaries
+#   having different world states.  Instead, defining a capability for a channel
+#   informs those binaries without this capability that they must cease
+#   processing transactions until they have been upgraded.  For v1.0.x if any
+#   capabilities are defined (including a map with all capabilities turned off)
+#   then the v1.0.x peer will deliberately crash.
+#
+################################################################################
+Capabilities:
+    # Channel capabilities apply to both the ${ORDERERNAME_ALL_LOWER}s and the peers and must be
+    # supported by both.
+    # Set the value of the capability to true to require it.
+    Channel: &ChannelCapabilities
+        # V2_0 capability ensures that ${ORDERERNAME_ALL_LOWER}s and peers behave according
+        # to v2.0 channel capabilities. ${ORDERERNAME}s and peers from
+        # prior releases would behave in an incompatible way, and are therefore
+        # not able to participate in channels at v2.0 capability.
+        # Prior to enabling V2.0 channel capabilities, ensure that all
+        # ${ORDERERNAME_ALL_LOWER}s and peers on a channel are at v2.0.0 or later.
+        V2_0: true
+
+    # ${ORDERERNAME} capabilities apply only to the ${ORDERERNAME_ALL_LOWER}s, and may be safely
+    # used with prior release peers.
+    # Set the value of the capability to true to require it.
+    ${ORDERERNAME}: &${ORDERERNAME}Capabilities
+        # V2_0 ${ORDERERNAME_ALL_LOWER} capability ensures that ${ORDERERNAME_ALL_LOWER}s behave according
+        # to v2.0 ${ORDERERNAME_ALL_LOWER} capabilities. ${ORDERERNAME}s from
+        # prior releases would behave in an incompatible way, and are therefore
+        # not able to participate in channels at v2.0 ${ORDERERNAME_ALL_LOWER} capability.
+        # Prior to enabling V2.0 ${ORDERERNAME_ALL_LOWER} capabilities, ensure that all
+        # ${ORDERERNAME_ALL_LOWER}s on channel are at v2.0.0 or later.
+        V2_0: true
+
+    # Application capabilities apply only to the peer network, and may be safely
+    # used with prior release ${ORDERERNAME_ALL_LOWER}s.
+    # Set the value of the capability to true to require it.
+    Application: &ApplicationCapabilities
+        # V2_0 application capability ensures that peers behave according
+        # to v2.0 application capabilities. Peers from
+        # prior releases would behave in an incompatible way, and are therefore
+        # not able to participate in channels at v2.0 application capability.
+        # Prior to enabling V2.0 application capabilities, ensure that all
+        # peers on channel are at v2.0.0 or later.
+        V2_0: true
+
+################################################################################
+#
+#   SECTION: Application
+#
+#   - This section defines the values to encode into a config transaction or
+#   genesis block for application related parameters
+#
+################################################################################
+Application: &ApplicationDefaults
+
+    # Organizations is the list of orgs which are defined as participants on
+    # the application side of the network
+    Organizations:
+
+    # Policies defines the set of policies at this level of the config tree
+    # For Application policies, their canonical path is
+    # The LifecycleEndorsement policy is set to only owner meaning only owner need to approve the chaincode and with his approval the chaincode definition is committed to the channel. But for any    other org to use the functions of chaincode they first need to approve the chaincode. Without approval they cannot use the chaincode functions even if its committed 
+    #   /Channel/Application/<PolicyName>
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: Signature
+            Rule: "OR('${OWNERNAME_FIRST_UPPER}MSP.admin')"
+        LifecycleEndorsement:
+            Type: Signature
+            Rule: "OR('${OWNERNAME_FIRST_UPPER}MSP.peer')"
+        Endorsement:
+            Type: Signature
+            Rule: "OR('${OWNERNAME_FIRST_UPPER}MSP.peer')"
+
+    Capabilities:
+        <<: *ApplicationCapabilities
+################################################################################
+#
+#   SECTION: ${ORDERERNAME}
+#
+#   - This section defines the values to encode into a config transaction or
+#   genesis block for ${ORDERERNAME_ALL_LOWER} related parameters
+#
+################################################################################
+${ORDERERNAME}: &${ORDERERNAME}Defaults
+
+    # ${ORDERERNAME} Type: The ${ORDERERNAME_ALL_LOWER} implementation to start
+    ${ORDERERNAME}Type: etcdraft
+    # Addresses used to be the list of ${ORDERERNAME_ALL_LOWER} addresses that clients and peers
+    # could connect to.  However, this does not allow clients to associate ${ORDERERNAME_ALL_LOWER}
+    # addresses and ${ORDERERNAME_ALL_LOWER} organizations which can be useful for things such
+    # as TLS validation.  The preferred way to specify ${ORDERERNAME_ALL_LOWER} addresses is now
+    # to include the ${ORDERERNAME}Endpoints item in your org definition
+    Addresses:
+        - ${ORDERER0_NAME}.${PROJECT_NAME}.com:${ORDERER0_LIS_PORT}
+        - ${ORDERER1_NAME}.${PROJECT_NAME}.com:${ORDERER1_LIS_PORT}
+        - ${ORDERER2_NAME}.${PROJECT_NAME}.com:${ORDERER2_LIS_PORT}
+       
+    EtcdRaft:
+        Consenters:
+        - Host: ${ORDERER0_NAME}.${PROJECT_NAME}.com
+          Port: ${ORDERER0_LIS_PORT}
+          ClientTLSCert: ../../../organizations/${ORDERERNAME_ALL_LOWER}Organizations/${ORDERERNAME_ALL_LOWER}.${PROJECT_NAME}.com/${ORDERERNAME_ALL_LOWER}s/${ORDERER0_NAME}.${PROJECT_NAME}.com/tls/server.crt
+          ServerTLSCert: ../../../organizations/${ORDERERNAME_ALL_LOWER}Organizations/${ORDERERNAME_ALL_LOWER}.${PROJECT_NAME}.com/${ORDERERNAME_ALL_LOWER}s/${ORDERER0_NAME}.${PROJECT_NAME}.com/tls/server.crt
+        - Host: ${ORDERER1_NAME}.${PROJECT_NAME}.com
+          Port: ${ORDERER1_LIS_PORT}
+          ClientTLSCert: ../../../organizations/${ORDERERNAME_ALL_LOWER}Organizations/${ORDERERNAME_ALL_LOWER}.${PROJECT_NAME}.com/${ORDERERNAME_ALL_LOWER}s/${ORDERER1_NAME}.${PROJECT_NAME}.com/tls/server.crt
+          ServerTLSCert: ../../../organizations/${ORDERERNAME_ALL_LOWER}Organizations/${ORDERERNAME_ALL_LOWER}.${PROJECT_NAME}.com/${ORDERERNAME_ALL_LOWER}s/${ORDERER1_NAME}.${PROJECT_NAME}.com/tls/server.crt
+        - Host: ${ORDERER2_NAME}.${PROJECT_NAME}.com
+          Port: ${ORDERER2_LIS_PORT}
+          ClientTLSCert: ../../../organizations/${ORDERERNAME_ALL_LOWER}Organizations/${ORDERERNAME_ALL_LOWER}.${PROJECT_NAME}.com/${ORDERERNAME_ALL_LOWER}s/${ORDERER2_NAME}.${PROJECT_NAME}.com/tls/server.crt
+          ServerTLSCert: ../../../organizations/${ORDERERNAME_ALL_LOWER}Organizations/${ORDERERNAME_ALL_LOWER}.${PROJECT_NAME}.com/${ORDERERNAME_ALL_LOWER}s/${ORDERER2_NAME}.${PROJECT_NAME}.com/tls/server.crt    
+
+    # Batch Timeout: The amount of time to wait before creating a batch
+    BatchTimeout: 2s
+
+    # Batch Size: Controls the number of messages batched into a block
+    BatchSize:
+
+        # Max Message Count: The maximum number of messages to permit in a batch
+        MaxMessageCount: 10
+
+        # Absolute Max Bytes: The absolute maximum number of bytes allowed for
+        # the serialized messages in a batch.
+        AbsoluteMaxBytes: 99 MB
+
+        # Preferred Max Bytes: The preferred maximum number of bytes allowed for
+        # the serialized messages in a batch. A message larger than the preferred
+        # max bytes will result in a batch larger than preferred max bytes.
+        PreferredMaxBytes: 512 KB
+
+    # Organizations is the list of orgs which are defined as participants on
+    # the ${ORDERERNAME_ALL_LOWER} side of the network
+    Organizations:
+
+    # Policies defines the set of policies at this level of the config tree
+    # For ${ORDERERNAME} policies, their canonical path is
+    #   /Channel/${ORDERERNAME}/<PolicyName>
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        # BlockValidation specifies what signatures must be included in the block
+        # from the ${ORDERERNAME_ALL_LOWER} for the peer to validate it.
+        BlockValidation:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+
+################################################################################
+#
+#   CHANNEL
+#
+#   This section defines the values to encode into a config transaction or
+#   genesis block for channel related parameters.
+#
+################################################################################
+Channel: &ChannelDefaults
+    # Policies defines the set of policies at this level of the config tree
+    # For Channel policies, their canonical path is
+    #   /Channel/<PolicyName>
+    Policies:
+        # Who may invoke the 'Deliver' API
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        # Who may invoke the 'Broadcast' API
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        # By default, who may modify elements at this config level
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+
+    # Capabilities describes the channel level capabilities, see the
+    # d${PROJECT_NAME}cated Capabilities section elsewhere in this file for a full
+    # description
+    Capabilities:
+        <<: *ChannelCapabilities
+
+################################################################################
+#
+#   Profile
+#
+#   - Different configuration profiles may be encoded here to be specified
+#   as parameters to the configtxgen tool
+#
+################################################################################
+Profiles:
+
+    TwoOrgsApplicationGenesis:
+        <<: *ChannelDefaults
+        ${ORDERERNAME}:
+            <<: *${ORDERERNAME}Defaults
+            Organizations:
+                - *${ORDERERNAME}Org
+            Capabilities: *${ORDERERNAME}Capabilities
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *${OWNERNAME_FIRST_UPPER}
+                - *${ORGNAME_FIRST_UPPER}
+            Capabilities: *ApplicationCapabilities

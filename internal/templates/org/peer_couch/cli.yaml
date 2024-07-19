@@ -1,0 +1,40 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '3'
+
+networks:
+  ${NETWORK}:    
+       name: ${NETWORK}
+volumes:
+  cli_${ORGNAME}:
+
+  
+services:
+
+  cli_${ORGNAME}:
+    container_name: cli_${ORGNAME}
+    image: hyperledger/fabric-tools:2.5.4
+    tty: true
+    stdin_open: true
+    environment:
+      - GOPATH=/opt/gopath
+      - FABRIC_LOGGING_SPEC=INFO
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      #- FABRIC_LOGGING_SPEC=DEBUG
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash
+    volumes:
+        - cli_${ORGNAME}:/opt/gopath/src/github.com/hyperledger/fabric/peer
+        - ../../../organizations:/opt/gopath/src/github.com/hyperledger/fabric/peer/organizations
+        - ../../../script_files:/opt/gopath/src/github.com/hyperledger/fabric/peer/script_files/
+        - ${CCPATH}:/opt/gopath/src/github.com/hyperledger/fabric/peer/${CCNAME}
+        - ../../../../config:/etc/hyperledger/peercfg
+    networks:
+      - ${NETWORK}      
+      
+      
+      
+

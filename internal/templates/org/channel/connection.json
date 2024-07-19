@@ -1,0 +1,7 @@
+{
+  "address": "${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com:${CC_PORT}",
+  "dial_timeout": "10s",
+  "tls_required": true,
+  "client_auth_required": false,
+  "root_cert":"${ROOT_CERTIFICATE}"
+}

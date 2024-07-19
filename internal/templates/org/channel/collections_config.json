@@ -1,0 +1,15 @@
+[
+    {
+        "name": "${ORGNAME_FIRST_UPPER}",
+        "policy": "OR('${ORGNAME_FIRST_UPPER}MSP.member')",
+        "requiredPeerCount": 1,
+        "maxPeerCount": 2,
+        "blockToLive": 0,
+        "memberOnlyRead": false,
+        "memberOnlyWrite": true,
+        "endorsementPolicy": {
+            "signaturePolicy": "OR('${ORGNAME_FIRST_UPPER}MSP.member')"
+        }
+    }
+         
+]

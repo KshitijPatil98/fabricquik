@@ -1,0 +1,49 @@
+{
+    "name": "${PROJECT_NAME}-HLF-NETWORK-${ORG}",
+    "version": "1.0.0",
+    "client": {
+        "organization": "${ORG}",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "${ORG}": {
+            "mspid": "${ORG}MSP",
+            "peers": [
+                "peer0.${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com"
+            ],
+            "certificateAuthorities": [
+                "orgca-${ORGNAME_ALL_LOWER}"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com": {
+            "url": "peer0.${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com:${P0PORT}",
+            "tlsCACerts": {
+                "pem": "${PEERPEM}"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com",
+                "hostnameOverride": "peer0.${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com"
+            }
+        }
+    },
+    "certificateAuthorities": {
+        "orgca-${ORGNAME_ALL_LOWER}": {
+            "url": "https://orgca-${ORGNAME_ALL_LOWER}:${CAPORT}",
+            "caName": "orgca-${ORGNAME_ALL_LOWER}",
+            "tlsCACerts": {
+                "pem": ["${CAPEM}"]
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}
