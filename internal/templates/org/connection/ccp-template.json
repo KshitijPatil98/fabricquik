@@ -1,8 +1,8 @@
 {
-    "name": "${PROJECT_NAME}-HLF-NETWORK-${ORG}",
+    "name": "${NETWORKNAME}-HLF-NETWORK-${ORGFC}",
     "version": "1.0.0",
     "client": {
-        "organization": "${ORG}",
+        "organization": "${ORGFC}",
         "connection": {
             "timeout": {
                 "peer": {
@@ -12,37 +12,37 @@
         }
     },
     "organizations": {
-        "${ORG}": {
-            "mspid": "${ORG}MSP",
+        "${ORGNAMEFC}": {
+            "mspid": "${ORGFC}MSP",
             "peers": [
-                "peer0.${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com"
+                "peer0.${ORG}.${NETWORKNAME}.com"
             ],
             "certificateAuthorities": [
-                "orgca-${ORGNAME_ALL_LOWER}"
+                "orgca-${ORG}"
             ]
         }
     },
     "peers": {
-        "peer0.${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com": {
-            "url": "peer0.${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com:${P0PORT}",
+        "peer0.${ORG}.${NETWORKNAME}.com": {
+            "url": "peer0.${ORG}.${NETWORKNAME}.com:${P0PORT}",
             "tlsCACerts": {
                 "pem": "${PEERPEM}"
             },
             "grpcOptions": {
-                "ssl-target-name-override": "peer0.${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com",
-                "hostnameOverride": "peer0.${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com"
+                "ssl-target-name-override": "peer0.${ORG}.${NETWORKNAME}.com",
+                "hostnameOverride": "peer0.${ORG}.${NETWORKNAME}.com"
             }
         }
     },
     "certificateAuthorities": {
-        "orgca-${ORGNAME_ALL_LOWER}": {
-            "url": "https://orgca-${ORGNAME_ALL_LOWER}:${CAPORT}",
-            "caName": "orgca-${ORGNAME_ALL_LOWER}",
+        "orgca-${ORG}": {
+            "url": "https://orgca-${ORG}:${CAPORT}",
+            "caName": "orgca-${ORG}",
             "tlsCACerts": {
                 "pem": ["${CAPEM}"]
             },
             "httpOptions": {
-                "verify": false
+                "verify": true
             }
         }
     }

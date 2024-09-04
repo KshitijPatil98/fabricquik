@@ -1,0 +1,32 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '3'
+
+networks:
+  ${NETWORK}:    
+       name: ${NETWORK}
+
+    
+         
+services:
+
+  orgca-${ORGNAME}:
+    image: hyperledger/fabric-ca:1.5.7
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=orgca-${ORGNAME}
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=${ORGCAPORT}
+    ports:
+      - "${ORGCAPORT}:${ORGCAPORT}"
+    command: sh -c 'fabric-ca-server start -b orgcaadmin:orgcaadminpw -d'
+    volumes:
+      - ../../../organizations/orgca_certs/${ORGNAME}:/etc/hyperledger/fabric-ca-server
+    container_name: orgca-${ORGNAME} 
+    networks:
+      - ${NETWORK}
+
+ 

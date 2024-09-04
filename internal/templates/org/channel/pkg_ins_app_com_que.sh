@@ -148,6 +148,7 @@ approveForMyOrg 0
 infoln "Let us commit the chaincode definition on the channel. Here we dont need signature from anyone because lfcc policy is set to admin of owner "
 commitChaincodeDefinition 0
 
+infoln "Let us now query the committed chaincode."
 queryCommitted 0
 
 

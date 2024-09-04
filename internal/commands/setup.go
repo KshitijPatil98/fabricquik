@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/KshitijPatil98/fabriquik/internal/config"
 	"github.com/KshitijPatil98/fabriquik/internal/models"
 	"github.com/KshitijPatil98/fabriquik/internal/utils"
 )
@@ -49,7 +50,7 @@ func Setup() {
 	*chaincodeName = strings.ToLower(*chaincodeName)
 
 	chaincodePath := filepath.Join(*path, *chaincodeName)
-	chaincodePkgPath := filepath.Join(*path, (*chaincodeName)+"tar.gz")
+	chaincodePkgPath := filepath.Join(*path, (*chaincodeName)+".tar.gz")
 
 	networkConfig := models.Network{
 		NetworkDirectory: *path,
@@ -66,12 +67,8 @@ func Setup() {
 		return
 
 	}
-	configPresent, chaincodePresent, err := utils.CheckSetupFolders(&networkConfig)
+	chaincodePresent, err := utils.CheckSetupFolders(&networkConfig)
 	if err != nil {
-		return
-	}
-	if !configPresent {
-		fmt.Println("The given directory path does not have a config folder. Please make sure the config folder is present and try again.")
 		return
 	}
 
@@ -140,19 +137,43 @@ func Setup() {
 		return
 	}
 
-	fullPath := filepath.Join(networkConfig.NetworkDirectory, "network_config.json")
-	err = utils.OutputJson(&networkConfig, &fullPath)
+	templateFilePath := "../../internal/templates/generic/bootstrap.sh"
+	outputFilePath := filepath.Join(networkConfig.NetworkDirectory, "network_files/bootstrap.sh")
+
+	data, err := utils.ReadFile(templateFilePath)
 	if err != nil {
 		return
 	}
-
-	//We will persist the info about where the config paths are stored
-	configPath := models.ConfigPath{
-		NetworkConfigPath: fullPath,
-		NetworkDirectory:  networkConfig.NetworkDirectory,
+	err = utils.WriteFile(outputFilePath, data)
+	if err != nil {
+		return
 	}
-	localConfigPath := "../../internal/configurations/configInfo.json"
-	err = utils.OutputJson(&configPath, &localConfigPath)
+	err = os.Chmod(outputFilePath, 0755)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	templateFilePath = "../../internal/templates/generic/stop.sh"
+	outputFilePath = filepath.Join(networkConfig.NetworkDirectory, "network_files/stop.sh")
+
+	data, err = utils.ReadFile(templateFilePath)
+	if err != nil {
+		return
+	}
+	err = utils.WriteFile(outputFilePath, data)
+	if err != nil {
+		return
+	}
+	// Equivalent to `chmod +x` in shell
+	err = os.Chmod(outputFilePath, 0755)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	//The config file will be created and stored in the /home/.fabriquik folder.
+	err = utils.OutputJson(&networkConfig, &config.ConfigFilePath)
 	if err != nil {
 		return
 	}
