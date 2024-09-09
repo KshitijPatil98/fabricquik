@@ -52,6 +52,9 @@ func main() {
 	case "privatedata":
 		commands.PrivateData()
 
+	case "channel":
+		commands.Channel()
+
 	case "stop":
 		commands.Stop()
 
