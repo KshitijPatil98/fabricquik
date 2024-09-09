@@ -97,7 +97,6 @@ func PrivateData() {
 		}
 	}
 	policy = fmt.Sprintf("%v(%v)", *endorsement, policy)
-	fmt.Println(policy)
 
 	err = utils.CreatePrivateData(&networkConfig, &policy, &inputOrgs)
 	if err != nil {

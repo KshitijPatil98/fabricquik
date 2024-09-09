@@ -49,7 +49,7 @@ type Org_Config struct {
 }
 
 type Orderer_Config struct {
-	OrgName  string    `json:"orgName"`
+	OrgName  string    `json:"orgName,omitempty"`
 	OrgType  string    `json:"orgType,omitempty"`
 	Ca       Ca        `json:"ca"`
 	Orderers []Orderer `json:"orderers"`

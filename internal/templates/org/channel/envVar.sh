@@ -8,7 +8,7 @@
 # This is a collection of bash functions used by different scripts
 
 # imports
-. ${PWD}/script_files/channel_scripts/${ORGNAME}/utils.sh
+. ${PWD}/script_files/channel/${ORGNAME}/utils.sh
 
 export ORDERER_CA=${PWD}/organizations/ordererOrganizations/orderer.${NETWORK}.com/tlsca/tlsca.orderer.${NETWORK}.com-cert.pem
 

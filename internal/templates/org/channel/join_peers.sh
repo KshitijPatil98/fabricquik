@@ -9,11 +9,11 @@
 : ${CONTAINER_CLI:="docker"}
 
 BLOCKFILE="${PWD}/channel_files/channel_artifacts/${CHANNEL_NAME}/${CHANNEL_NAME}.block"
-#export FABRIC_CFG_PATH=${PWD}/../config/
+export FABRIC_CFG_PATH=${PWD}/../config/
 
 # imports  
-. ${PWD}/script_files/channel_scripts/${ORGNAME}/envVar.sh
-. ${PWD}/script_files/channel_scripts/${ORGNAME}/utils.sh
+. ${PWD}/script_files/channel/${ORGNAME}/envVar.sh
+. ${PWD}/script_files/channel/${ORGNAME}/utils.sh
 
 
 
@@ -39,7 +39,7 @@ joinChannel() {
 
 setAnchorPeer() {
   PEER=$1
-  docker exec cli_${ORGNAME} ./script_files/channel_scripts/${ORGNAME}/${CHANNEL_NAME}/setAnchorPeer.sh $PEER $CHANNEL_NAME
+  docker exec cli_${ORGNAME} ./script_files/channel/${ORGNAME}/${CHANNEL_NAME}/setAnchorPeer.sh $PEER $CHANNEL_NAME
 }
 
 

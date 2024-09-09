@@ -5,8 +5,8 @@ function one_line_pem {
 }
 
 function json_ccp {
-    local PP=$(one_line_pem $4)
-    local CP=$(one_line_pem $5)
+    local PP=$(one_line_pem $6)
+    local CP=$(one_line_pem $7)
     sed -e "s/\${ORG}/$1/" \
         -e "s/\${ORGFC}/$2/" \
         -e "s/\${NETWORKNAME}/$3/" \
@@ -14,7 +14,7 @@ function json_ccp {
         -e "s/\${CAPORT}/$5/" \
         -e "s#\${PEERPEM}#$PP#" \
         -e "s#\${CAPEM}#$CP#" \
-        ${PWD}/script_files/ccp_scripts/${ORGNAME}/ccp-template.json > ${PWD}/connection_files/${ORGNAME}/connection-${ORGNAME}.json
+        ${PWD}/script_files/ccp/${ORGNAME}/ccp-template.json > ${PWD}/connection_files/${ORGNAME}/connection-${ORGNAME}.json
 }
 
 

@@ -5,12 +5,8 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-# import utils
-. ${PWD}/script_files/channel_scripts/${ORGNAME}/envVar.sh
-. ${PWD}/script_files/channel_scripts/${ORGNAME}/utils.sh
-# fetchChannelConfig <org> <channel_id> <output_json>
-# Writes the current channel config for a given channel to a JSON file
-# NOTE: this must be run in a CLI container since it requires configtxlator
+#No imports because we import this file in setAnchorPeer.sh which already has all the imports.
+
 fetchChannelConfig() {
   PEER=$1
   CHANNEL=$2

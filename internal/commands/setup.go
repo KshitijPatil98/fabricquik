@@ -76,6 +76,7 @@ func Setup() {
 		fmt.Printf("No chaincode folder present. Please make sure a folder with name %v is present at path %v and try again.", *chaincodeName, *path)
 		return
 	}
+	fmt.Println("This might take few minutes depending on your internet connection")
 
 	if *docker {
 		//log.Println("Docker flag is set. Proceeding to download the binaries and images")

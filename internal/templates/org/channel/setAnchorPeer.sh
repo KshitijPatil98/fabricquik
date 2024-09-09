@@ -5,17 +5,15 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-# import utils
-# imports  
 #VVVIP This file runs inside cli container so path is set accordingly. Check the cli container to see the volume mapping. This diff is only for two files setAnchorPeer.sh and configUpdate.sh 
 
 
 #ALSO ANCHOR PEER IS SET FOR AN ORG. SO ONCE THE ORG HAS JOINED THE CHANNEL THERE IS NO NEED TO GET ANY SIGNATURES From any other org
 
 
-. ${PWD}/script_files/channel_scripts/${ORGNAME}/envVar.sh
-. ${PWD}/script_files/channel_scripts/${ORGNAME}/configUpdate.sh
-. ${PWD}/script_files/channel_scripts/${ORGNAME}/utils.sh
+. ${PWD}/script_files/channel/${ORGNAME}/envVar.sh
+. ${PWD}/script_files/channel/${ORGNAME}/configUpdate.sh
+. ${PWD}/script_files/channel/${ORGNAME}/utils.sh
 
 
 # NOTE: this must be run in a CLI container since it requires jq and configtxlator 

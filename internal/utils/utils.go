@@ -796,14 +796,15 @@ func CreateConfigtx(networkConfig *models.Network, policyMap *map[string]string)
 	templateFilePath = "../../internal/templates/generic/configtx/profiles.yaml"
 
 	var profileString string
+	spaces := "                "
 	for index, orgConfig := range orgConfigs {
 
 		if index == 0 {
 			profileString = profileString + fmt.Sprintf("- *%v\n", strings.ToUpper(string(orgConfig.OrgName[0]))+strings.ToLower(orgConfig.OrgName[1:]))
 		} else if index == len(orgConfigs)-1 {
-			profileString = profileString + fmt.Sprintf("\t\t- *%v", strings.ToUpper(string(orgConfig.OrgName[0]))+strings.ToLower(orgConfig.OrgName[1:]))
+			profileString = profileString + fmt.Sprintf("%s- *%v", spaces, strings.ToUpper(string(orgConfig.OrgName[0]))+strings.ToLower(orgConfig.OrgName[1:]))
 		} else {
-			profileString = profileString + fmt.Sprintf("\t\t- *%v\n", strings.ToUpper(string(orgConfig.OrgName[0]))+strings.ToLower(orgConfig.OrgName[1:]))
+			profileString = profileString + fmt.Sprintf("%s- *%v\n", spaces, strings.ToUpper(string(orgConfig.OrgName[0]))+strings.ToLower(orgConfig.OrgName[1:]))
 		}
 	}
 	replacements = map[string]string{
@@ -833,7 +834,6 @@ func CreatePrivateData(networkConfig *models.Network, policy *string, inputOrgs 
 
 	_, err := os.Stat(outputFilePath)
 
-	fmt.Println(err)
 	pdDetails := models.PdDetails{}
 	pdDetailsSlice := []models.PdDetails{}
 	if os.IsNotExist(err) {

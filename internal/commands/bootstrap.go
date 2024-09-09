@@ -73,7 +73,7 @@ func Bootstrap() {
 
 	}
 
-	cmd := exec.Command("bash", bootstrapFilePath, *orgName, orgType)
+	cmd := exec.Command("bash", bootstrapFilePath, orgType, *orgName)
 	cmd.Dir = filepath.Join(networkConfig.NetworkDirectory, "network_files")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
